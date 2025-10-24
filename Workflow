@@ -1,0 +1,9 @@
+[User Uploads File] 
+        ↓
+[Frontend -> sends via Fetch API]
+        ↓
+[Express Backend receives & stores file in /uploads]
+        ↓
+[Metadata saved to DB (filename, size, date, type)]
+        ↓
+[Response -> Display in file list with download/delete options]
