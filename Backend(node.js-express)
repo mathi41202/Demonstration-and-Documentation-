@@ -1,0 +1,48 @@
+// file: server.js
+const express = require("express");
+const multer = require("multer");
+const cors = require("cors");
+const fs = require("fs");
+const path = require("path");
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+app.use("/uploads", express.static("uploads"));
+
+// Storage config
+const storage = multer.diskStorage({
+  destination: "./uploads/",
+  filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname)
+});
+const upload = multer({ storage });
+
+// Upload route
+app.post("/upload", upload.array("files"), (req, res) => {
+  const fileInfo = req.files.map(file => ({
+    filename: file.filename,
+    originalname: file.originalname,
+    size: file.size,
+    path: `/uploads/${file.filename}`
+  }));
+  res.json({ message: "Files uploaded successfully", files: fileInfo });
+});
+
+// Get uploaded files
+app.get("/files", (req, res) => {
+  fs.readdir("./uploads", (err, files) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(files);
+  });
+});
+
+// Delete file
+app.delete("/files/:filename", (req, res) => {
+  const filePath = path.join(__dirname, "uploads", req.params.filename);
+  fs.unlink(filePath, err => {
+    if (err) return res.status(500).json({ error: "Failed to delete file" });
+    res.json({ message: "File deleted successfully" });
+  });
+});
+
+app.listen(5000, () => console.log("Server running on http://localhost:5000"));
