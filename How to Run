@@ -1,0 +1,19 @@
+▶️ How to Run
+
+1. Create a folder → add server.js and index.html.
+
+
+2. Install Node.js packages:
+
+npm install express multer cors
+
+
+3. Run the server:
+
+node server.js
+
+
+4. Open index.html in a browser.
+
+
+5. Upload files and see the list appear!
